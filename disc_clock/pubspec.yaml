@@ -18,3 +18,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/1.webp
+    - assets/2.webp
+    - assets/3.webp
+    - assets/4.webp
+    - assets/5.webp
+    - assets/6.webp
