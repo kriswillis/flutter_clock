@@ -41,14 +41,20 @@ class _DiscClockState extends State<DiscClock>
   var _location = '';
   Timer _timer;
   AnimationController _controller;
+  Animation _animation;
 
   @override
   void initState() {
     super.initState();
 
     _controller = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 200),
       vsync: this,
+    );
+
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInExpo,
     );
 
     widget.model.addListener(_updateModel);
@@ -153,10 +159,10 @@ class _DiscClockState extends State<DiscClock>
               top: -350,
               left: -550,
               child: AnimatedBuilder(
-                animation: _controller,
+                animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
                   return Transform.rotate(
-                    angle: radians(6) * _controller.value,
+                    angle: radians(6) * _animation.value,
                     child: _widget,
                   );
                 },
@@ -172,11 +178,11 @@ class _DiscClockState extends State<DiscClock>
               top: -300,
               left: -500,
               child: AnimatedBuilder(
-                animation: _controller,
+                animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
                   return Transform.rotate(
                     angle: radians(_now.second % 10 == 0 ? 6 : 0) *
-                        _controller.value,
+                        _animation.value,
                     child: _widget,
                   );
                 },
@@ -192,11 +198,10 @@ class _DiscClockState extends State<DiscClock>
               top: -250,
               left: -450,
               child: AnimatedBuilder(
-                animation: _controller,
+                animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
                   return Transform.rotate(
-                    angle:
-                        radians(_now.second == 0 ? 6 : 0) * _controller.value,
+                    angle: radians(_now.second == 0 ? 6 : 0) * _animation.value,
                     child: _widget,
                   );
                 },
@@ -213,13 +218,13 @@ class _DiscClockState extends State<DiscClock>
               top: -200,
               left: -400,
               child: AnimatedBuilder(
-                animation: _controller,
+                animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
                   return Transform.rotate(
                       angle: radians(_now.second == 0 && _now.minute % 10 == 0
                               ? 7.5
                               : 0) *
-                          _controller.value,
+                          _animation.value,
                       child: _widget);
                 },
                 child: Transform.rotate(
@@ -239,7 +244,7 @@ class _DiscClockState extends State<DiscClock>
               top: -150,
               left: -350,
               child: AnimatedBuilder(
-                animation: _controller,
+                animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
                   double offset = _now.second == 0 && _now.minute == 0 ? 9 : 0;
 
@@ -250,7 +255,7 @@ class _DiscClockState extends State<DiscClock>
                   }
 
                   return Transform.rotate(
-                    angle: radians(offset) * _controller.value,
+                    angle: radians(offset) * _animation.value,
                     child: _widget,
                   );
                 },
@@ -272,7 +277,7 @@ class _DiscClockState extends State<DiscClock>
               top: -100,
               left: -300,
               child: AnimatedBuilder(
-                animation: _controller,
+                animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
                   return Transform.rotate(
                     angle: radians(_now.second == 0 &&
@@ -280,7 +285,7 @@ class _DiscClockState extends State<DiscClock>
                                 _now.hour % 10 == 0
                             ? 12
                             : 0) *
-                        _controller.value,
+                        _animation.value,
                     child: _widget,
                   );
                 },
