@@ -102,7 +102,7 @@ class _DiscClockState extends State<DiscClock>
             highlightColor: Color(0xFF8AB4F8),
             // Second hand.
             accentColor: Color(0xFF669DF6),
-            backgroundColor: Color(0xFFD2E3FC),
+            backgroundColor: Color(0xFF3C4043),
           )
         : Theme.of(context).copyWith(
             primaryColor: Color(0xFFD2E3FC),
@@ -272,6 +272,13 @@ class _DiscClockState extends State<DiscClock>
                   child: Image.asset('assets/1.webp'),
                 ),
               ),
+            ),
+            Positioned(
+              width: 1200,
+              height: 1200,
+              top: -450,
+              left: -650,
+              child: Image.asset('assets/overlay.webp'),
             ),
             Positioned(
               left: 0,
