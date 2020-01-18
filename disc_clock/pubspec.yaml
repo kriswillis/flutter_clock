@@ -1,6 +1,6 @@
 name: disc_clock
-description: Analog clock.
-version: 1.0.0+1
+description: Disc clock.
+version: 1.0.0
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

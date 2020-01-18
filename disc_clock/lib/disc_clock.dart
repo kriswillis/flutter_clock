@@ -10,19 +10,6 @@ import 'package:flutter_clock_helper/model.dart';
 import 'package:intl/intl.dart';
 import 'package:vector_math/vector_math_64.dart' show radians;
 
-import 'container_hand.dart';
-import 'drawn_hand.dart';
-
-/// Total distance traveled by a second or a minute hand, each second or minute,
-/// respectively.
-final radiansPerTick = radians(360 / 60);
-
-/// Total distance traveled by an hour hand, each hour, in radians.
-final radiansPerHour = radians(360 / 12);
-
-/// A basic analog clock.
-///
-/// You can do better than this!
 class DiscClock extends StatefulWidget {
   const DiscClock(this.model);
 
@@ -39,6 +26,7 @@ class _DiscClockState extends State<DiscClock>
   var _temperatureRange = '';
   var _condition = '';
   var _location = '';
+
   Timer _timer;
   AnimationController _controller;
   Animation _animation;
@@ -299,37 +287,6 @@ class _DiscClockState extends State<DiscClock>
                           .floor() *
                       radians(12),
                   child: Image.asset('assets/1.webp'),
-                ),
-              ),
-            ),
-
-            // Example of a hand drawn with [CustomPainter].
-            DrawnHand(
-              color: customTheme.accentColor,
-              thickness: 4,
-              size: 1,
-              angleRadians: _now.second * radiansPerTick,
-            ),
-            DrawnHand(
-              color: customTheme.highlightColor,
-              thickness: 16,
-              size: 0.9,
-              angleRadians: _now.minute * radiansPerTick,
-            ),
-            // Example of a hand drawn with [Container].
-            ContainerHand(
-              color: Colors.transparent,
-              size: 0.5,
-              angleRadians: _now.hour * radiansPerHour +
-                  (_now.minute / 60) * radiansPerHour,
-              child: Transform.translate(
-                offset: Offset(0.0, -60.0),
-                child: Container(
-                  width: 32,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: customTheme.primaryColor,
-                  ),
                 ),
               ),
             ),
