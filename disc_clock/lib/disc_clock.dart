@@ -94,13 +94,6 @@ class _DiscClockState extends State<DiscClock>
 
   @override
   Widget build(BuildContext context) {
-    // There are many ways to apply themes to your clock. Some are:
-    //  - Inherit the parent Theme (see ClockCustomizer in the
-    //    flutter_clock_helper package).
-    //  - Override the Theme.of(context).colorScheme.
-    //  - Create your own [ThemeData], demonstrated in [DiscClock].
-    //  - Create a map of [Color]s to custom keys, demonstrated in
-    //    [DigitalClock].
     final customTheme = Theme.of(context).brightness == Brightness.light
         ? Theme.of(context).copyWith(
             // Hour hand.
@@ -131,6 +124,12 @@ class _DiscClockState extends State<DiscClock>
         ],
       ),
     );
+
+    final newMinute = _now.second == 0;
+    final newMinuteTen = newMinute && _now.minute % 10 == 0;
+    final newHour = newMinute && _now.minute == 0;
+    final newHourTen = newHour && _now.hour % 10 == 0;
+    final newDay = newHour && _now.hour == 0;
 
     return Semantics.fromProperties(
       properties: SemanticsProperties(
@@ -168,9 +167,10 @@ class _DiscClockState extends State<DiscClock>
               child: AnimatedBuilder(
                 animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
+                  double degrees = _now.second % 10 == 0 ? 6 : 0;
+
                   return Transform.rotate(
-                    angle: radians(_now.second % 10 == 0 ? 6 : 0) *
-                        _animation.value,
+                    angle: radians(degrees) * _animation.value,
                     child: _widget,
                   );
                 },
@@ -188,14 +188,15 @@ class _DiscClockState extends State<DiscClock>
               child: AnimatedBuilder(
                 animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
+                  double degrees = newMinute ? 6 : 0;
+
                   return Transform.rotate(
-                    angle: radians(_now.second == 0 ? 6 : 0) * _animation.value,
+                    angle: radians(degrees) * _animation.value,
                     child: _widget,
                   );
                 },
                 child: Transform.rotate(
-                  angle: (_now.second == 0 ? _now.minute - 1 : _now.minute) *
-                      radians(6),
+                  angle: (_now.minute - (newMinute ? 1 : 0)) * radians(6),
                   child: Image.asset('assets/4.webp'),
                 ),
               ),
@@ -208,19 +209,14 @@ class _DiscClockState extends State<DiscClock>
               child: AnimatedBuilder(
                 animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
+                  double degrees = newMinuteTen ? 7.5 : 0;
+
                   return Transform.rotate(
-                      angle: radians(_now.second == 0 && _now.minute % 10 == 0
-                              ? 7.5
-                              : 0) *
-                          _animation.value,
+                      angle: radians(degrees) * _animation.value,
                       child: _widget);
                 },
                 child: Transform.rotate(
-                  angle: ((_now.second == 0 && _now.minute % 10 == 0
-                                  ? _now.minute - 1
-                                  : _now.minute) /
-                              10)
-                          .floor() *
+                  angle: ((_now.minute - (newMinuteTen ? 1 : 0)) / 10).floor() *
                       radians(7.5),
                   child: Image.asset('assets/3.webp'),
                 ),
@@ -234,26 +230,22 @@ class _DiscClockState extends State<DiscClock>
               child: AnimatedBuilder(
                 animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
-                  double offset = _now.second == 0 && _now.minute == 0 ? 9 : 0;
+                  double degrees = newHour ? 9 : 0;
 
                   // Handle the change from 23 to 00
                   // Go forward 7 numbers rather than one (9° * 7)
-                  if (_now.hour == 0 && offset > 0) {
-                    offset = 63;
+                  if (_now.hour == 0 && degrees > 0) {
+                    degrees = 63;
                   }
 
                   return Transform.rotate(
-                    angle: radians(offset) * _animation.value,
+                    angle: radians(degrees) * _animation.value,
                     child: _widget,
                   );
                 },
                 child: Transform.rotate(
                   // Handle the change from 23 to 00
-                  angle: (_now.second == 0 && _now.minute == 0 && _now.hour == 0
-                          ? 3
-                          : (_now.second == 0 && _now.minute == 0
-                              ? _now.hour - 1
-                              : _now.hour)) *
+                  angle: (newDay ? 3 : (_now.hour - (newHour ? 1 : 0))) *
                       radians(9),
                   child: Image.asset('assets/2.webp'),
                 ),
@@ -267,24 +259,15 @@ class _DiscClockState extends State<DiscClock>
               child: AnimatedBuilder(
                 animation: _animation,
                 builder: (BuildContext context, Widget _widget) {
+                  double degrees = newHourTen ? 12 : 0;
+
                   return Transform.rotate(
-                    angle: radians(_now.second == 0 &&
-                                _now.minute == 0 &&
-                                _now.hour % 10 == 0
-                            ? 12
-                            : 0) *
-                        _animation.value,
+                    angle: radians(degrees) * _animation.value,
                     child: _widget,
                   );
                 },
                 child: Transform.rotate(
-                  angle: ((_now.second == 0 &&
-                                      _now.minute == 0 &&
-                                      _now.hour % 10 == 0
-                                  ? _now.hour - 1
-                                  : _now.hour) /
-                              10)
-                          .floor() *
+                  angle: ((_now.hour - (newHourTen ? 1 : 0)) / 10).floor() *
                       radians(12),
                   child: Image.asset('assets/1.webp'),
                 ),
