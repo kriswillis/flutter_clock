@@ -32,17 +32,25 @@ class DiscClock extends StatefulWidget {
   _DiscClockState createState() => _DiscClockState();
 }
 
-class _DiscClockState extends State<DiscClock> {
+class _DiscClockState extends State<DiscClock>
+    with SingleTickerProviderStateMixin {
   var _now = DateTime.now();
   var _temperature = '';
   var _temperatureRange = '';
   var _condition = '';
   var _location = '';
   Timer _timer;
+  AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
+
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+
     widget.model.addListener(_updateModel);
     // Set the initial values.
     _updateTime();
@@ -61,6 +69,7 @@ class _DiscClockState extends State<DiscClock> {
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     widget.model.removeListener(_updateModel);
     super.dispose();
   }
@@ -83,6 +92,9 @@ class _DiscClockState extends State<DiscClock> {
         Duration(seconds: 1) - Duration(milliseconds: _now.millisecond),
         _updateTime,
       );
+
+      _controller.reset();
+      _controller.forward();
     });
   }
 
@@ -140,9 +152,18 @@ class _DiscClockState extends State<DiscClock> {
               height: 1000,
               top: -350,
               left: -550,
-              child: Transform.rotate(
-                angle: _now.second * radians(6),
-                child: Image.asset('assets/6.webp'),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget _widget) {
+                  return Transform.rotate(
+                    angle: radians(6) * _controller.value,
+                    child: _widget,
+                  );
+                },
+                child: Transform.rotate(
+                  angle: (_now.second - 1) * radians(6),
+                  child: Image.asset('assets/6.webp'),
+                ),
               ),
             ),
             Positioned(
@@ -150,9 +171,19 @@ class _DiscClockState extends State<DiscClock> {
               height: 900,
               top: -300,
               left: -500,
-              child: Transform.rotate(
-                angle: (_now.second / 10).floor() * radians(6),
-                child: Image.asset('assets/5.webp'),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget _widget) {
+                  return Transform.rotate(
+                    angle: radians(_now.second % 10 == 0 ? 6 : 0) *
+                        _controller.value,
+                    child: _widget,
+                  );
+                },
+                child: Transform.rotate(
+                  angle: ((_now.second - 1) / 10).floor() * radians(6),
+                  child: Image.asset('assets/5.webp'),
+                ),
               ),
             ),
             Positioned(
@@ -160,9 +191,20 @@ class _DiscClockState extends State<DiscClock> {
               height: 800,
               top: -250,
               left: -450,
-              child: Transform.rotate(
-                angle: _now.minute * radians(6),
-                child: Image.asset('assets/4.webp'),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget _widget) {
+                  return Transform.rotate(
+                    angle:
+                        radians(_now.second == 0 ? 6 : 0) * _controller.value,
+                    child: _widget,
+                  );
+                },
+                child: Transform.rotate(
+                  angle: (_now.second == 0 ? _now.minute - 1 : _now.minute) *
+                      radians(6),
+                  child: Image.asset('assets/4.webp'),
+                ),
               ),
             ),
             Positioned(
@@ -170,9 +212,25 @@ class _DiscClockState extends State<DiscClock> {
               height: 700,
               top: -200,
               left: -400,
-              child: Transform.rotate(
-                angle: (_now.minute / 10).floor() * radians(7.5),
-                child: Image.asset('assets/3.webp'),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget _widget) {
+                  return Transform.rotate(
+                      angle: radians(_now.second == 0 && _now.minute % 10 == 0
+                              ? 7.5
+                              : 0) *
+                          _controller.value,
+                      child: _widget);
+                },
+                child: Transform.rotate(
+                  angle: ((_now.second == 0 && _now.minute % 10 == 0
+                                  ? _now.minute - 1
+                                  : _now.minute) /
+                              10)
+                          .floor() *
+                      radians(7.5),
+                  child: Image.asset('assets/3.webp'),
+                ),
               ),
             ),
             Positioned(
@@ -180,9 +238,32 @@ class _DiscClockState extends State<DiscClock> {
               height: 600,
               top: -150,
               left: -350,
-              child: Transform.rotate(
-                angle: _now.hour * radians(9),
-                child: Image.asset('assets/2.webp'),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget _widget) {
+                  double offset = _now.second == 0 && _now.minute == 0 ? 9 : 0;
+
+                  // Handle the change from 23 to 00
+                  // Go forward 7 numbers rather than one (9° * 7)
+                  if (_now.hour == 0 && offset > 0) {
+                    offset = 63;
+                  }
+
+                  return Transform.rotate(
+                    angle: radians(offset) * _controller.value,
+                    child: _widget,
+                  );
+                },
+                child: Transform.rotate(
+                  // Handle the change from 23 to 00
+                  angle: (_now.second == 0 && _now.minute == 0 && _now.hour == 0
+                          ? 3
+                          : (_now.second == 0 && _now.minute == 0
+                              ? _now.hour - 1
+                              : _now.hour)) *
+                      radians(9),
+                  child: Image.asset('assets/2.webp'),
+                ),
               ),
             ),
             Positioned(
@@ -190,11 +271,33 @@ class _DiscClockState extends State<DiscClock> {
               height: 500,
               top: -100,
               left: -300,
-              child: Transform.rotate(
-                angle: (_now.hour / 10).floor() * radians(12),
-                child: Image.asset('assets/1.webp'),
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget _widget) {
+                  return Transform.rotate(
+                    angle: radians(_now.second == 0 &&
+                                _now.minute == 0 &&
+                                _now.hour % 10 == 0
+                            ? 12
+                            : 0) *
+                        _controller.value,
+                    child: _widget,
+                  );
+                },
+                child: Transform.rotate(
+                  angle: ((_now.second == 0 &&
+                                      _now.minute == 0 &&
+                                      _now.hour % 10 == 0
+                                  ? _now.hour - 1
+                                  : _now.hour) /
+                              10)
+                          .floor() *
+                      radians(12),
+                  child: Image.asset('assets/1.webp'),
+                ),
               ),
             ),
+
             // Example of a hand drawn with [CustomPainter].
             DrawnHand(
               color: customTheme.accentColor,
