@@ -135,6 +135,48 @@ class _DiscClockState extends State<DiscClock> {
         color: customTheme.backgroundColor,
         child: Stack(
           children: [
+            Positioned(
+              width: 1000,
+              height: 1000,
+              top: -350,
+              left: -550,
+              child: Image.asset('assets/6.webp'),
+            ),
+            Positioned(
+              width: 900,
+              height: 900,
+              top: -300,
+              left: -500,
+              child: Image.asset('assets/5.webp'),
+            ),
+            Positioned(
+              width: 800,
+              height: 800,
+              top: -250,
+              left: -450,
+              child: Image.asset('assets/4.webp'),
+            ),
+            Positioned(
+              width: 700,
+              height: 700,
+              top: -200,
+              left: -400,
+              child: Image.asset('assets/3.webp'),
+            ),
+            Positioned(
+              width: 600,
+              height: 600,
+              top: -150,
+              left: -350,
+              child: Image.asset('assets/2.webp'),
+            ),
+            Positioned(
+              width: 500,
+              height: 500,
+              top: -100,
+              left: -300,
+              child: Image.asset('assets/1.webp'),
+            ),
             // Example of a hand drawn with [CustomPainter].
             DrawnHand(
               color: customTheme.accentColor,
