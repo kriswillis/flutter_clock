@@ -19,16 +19,24 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/1.webp
-    - assets/2.webp
-    - assets/3.webp
-    - assets/4.webp
-    - assets/5.webp
-    - assets/6.webp
-    - assets/overlay.webp
-    - assets/spacer.webp
-    - assets/weather.webp
+    - assets/light/1.webp
+    - assets/light/2.webp
+    - assets/light/3.webp
+    - assets/light/4.webp
+    - assets/light/5.webp
+    - assets/light/6.webp
+    - assets/light/spacer.webp
+    - assets/light/weather.webp
+    - assets/dark/1.webp
+    - assets/dark/2.webp
+    - assets/dark/3.webp
+    - assets/dark/4.webp
+    - assets/dark/5.webp
+    - assets/dark/6.webp
+    - assets/dark/spacer.webp
+    - assets/dark/weather.webp
     - assets/inner.webp
+    - assets/overlay.webp
   fonts:
     - family: VT323
       fonts:

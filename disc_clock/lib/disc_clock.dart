@@ -89,24 +89,13 @@ class _DiscClockState extends State<DiscClock>
 
   @override
   Widget build(BuildContext context) {
-    final customTheme = Theme.of(context).brightness == Brightness.light
-        ? Theme.of(context).copyWith(
-            primaryColor: Color(0xFFFF4901),
-            highlightColor: Color(0xFF8AB4F8),
-            accentColor: Color(0xFF669DF6),
-            backgroundColor: Color(0xFF000000),
-          )
-        : Theme.of(context).copyWith(
-            primaryColor: Color(0xFFFF4901),
-            highlightColor: Color(0xFF4285F4),
-            accentColor: Color(0xFF8AB4F8),
-            backgroundColor: Color(0xFF000000),
-          );
+    final mode =
+        Theme.of(context).brightness == Brightness.light ? 'light' : 'dark';
 
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
       style: TextStyle(
-        color: customTheme.primaryColor,
+        color: Color(0xFFFF4901),
         fontFamily: 'VT323',
         fontSize: 23,
       ),
@@ -119,51 +108,51 @@ class _DiscClockState extends State<DiscClock>
         value: time,
       ),
       child: Container(
-        color: customTheme.backgroundColor,
+        color: Color(0xFF000000),
         child: Stack(
           children: [
             NumberDisc(
-              image: '6.webp',
+              image: '$mode/6.webp',
               position: 8,
               animation: _animation,
               now: _now,
             ),
             NumberDisc(
-              image: '5.webp',
+              image: '$mode/5.webp',
               position: 7,
               animation: _animation,
               now: _now,
             ),
             NumberDisc(
-              image: '4.webp',
+              image: '$mode/4.webp',
               position: 6,
               animation: _animation,
               now: _now,
             ),
             NumberDisc(
-              image: '3.webp',
+              image: '$mode/3.webp',
               position: 5,
               animation: _animation,
               now: _now,
             ),
             NumberDisc(
-              image: '2.webp',
+              image: '$mode/2.webp',
               position: 4,
               animation: _animation,
               now: _now,
             ),
             NumberDisc(
-              image: '1.webp',
+              image: '$mode/1.webp',
               position: 3,
               animation: _animation,
               now: _now,
             ),
             StaticDisc(
-              image: 'spacer.webp',
+              image: '$mode/spacer.webp',
               position: 2,
             ),
             WeatherDisc(
-              image: 'weather.webp',
+              image: '$mode/weather.webp',
               position: 1,
               animation: _animation,
               condition: _condition,
