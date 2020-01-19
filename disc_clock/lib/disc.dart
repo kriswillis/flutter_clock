@@ -19,14 +19,14 @@ abstract class Disc extends StatelessWidget {
   }
 
   double positionTop() {
-    final double max = -350;
+    final double max = -342;
     final double step = 50;
 
     return max + ((maxDiscs - position) * step);
   }
 
   double positionLeft() {
-    final double max = -550;
+    final double max = -500;
     final double step = 50;
 
     return max + ((maxDiscs - position) * step);

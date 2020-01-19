@@ -29,3 +29,7 @@ flutter:
     - assets/spacer.webp
     - assets/weather.webp
     - assets/inner.webp
+  fonts:
+    - family: VT323
+      fonts:
+        - asset: third_party/VT323-Regular.ttf

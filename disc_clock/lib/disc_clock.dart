@@ -91,16 +91,13 @@ class _DiscClockState extends State<DiscClock>
   Widget build(BuildContext context) {
     final customTheme = Theme.of(context).brightness == Brightness.light
         ? Theme.of(context).copyWith(
-            // Hour hand.
-            primaryColor: Color(0xFF4285F4),
-            // Minute hand.
+            primaryColor: Color(0xFFFF4901),
             highlightColor: Color(0xFF8AB4F8),
-            // Second hand.
             accentColor: Color(0xFF669DF6),
             backgroundColor: Color(0xFF000000),
           )
         : Theme.of(context).copyWith(
-            primaryColor: Color(0xFFD2E3FC),
+            primaryColor: Color(0xFFFF4901),
             highlightColor: Color(0xFF4285F4),
             accentColor: Color(0xFF8AB4F8),
             backgroundColor: Color(0xFF000000),
@@ -108,14 +105,12 @@ class _DiscClockState extends State<DiscClock>
 
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
-      style: TextStyle(color: customTheme.primaryColor),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(_temperature),
-          Text(_condition.toString().split('.').last),
-        ],
+      style: TextStyle(
+        color: customTheme.primaryColor,
+        fontFamily: 'VT323',
+        fontSize: 23,
       ),
+      child: Text(_temperature),
     );
 
     return Semantics.fromProperties(
@@ -180,17 +175,14 @@ class _DiscClockState extends State<DiscClock>
             Positioned(
               width: 1200,
               height: 1200,
-              top: -450,
-              left: -650,
+              top: -442,
+              left: -600,
               child: Image.asset('assets/overlay.webp'),
             ),
             Positioned(
-              left: 0,
-              bottom: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: weatherInfo,
-              ),
+              left: 12,
+              top: 146,
+              child: weatherInfo,
             ),
           ],
         ),
