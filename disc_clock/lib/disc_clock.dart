@@ -89,8 +89,8 @@ class _DiscClockState extends State<DiscClock>
 
   @override
   Widget build(BuildContext context) {
-    final mode =
-        Theme.of(context).brightness == Brightness.light ? 'light' : 'dark';
+    final lightMode = Theme.of(context).brightness == Brightness.light;
+    final mode = lightMode ? 'light' : 'dark';
 
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
@@ -108,7 +108,7 @@ class _DiscClockState extends State<DiscClock>
         value: time,
       ),
       child: Container(
-        color: Color(0xFF000000),
+        color: lightMode ? Color(0xFFFFFFFF) : Color(0xFF000000),
         child: Stack(
           children: [
             NumberDisc(
