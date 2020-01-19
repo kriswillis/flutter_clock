@@ -26,3 +26,6 @@ flutter:
     - assets/5.webp
     - assets/6.webp
     - assets/overlay.webp
+    - assets/spacer.webp
+    - assets/weather.webp
+    - assets/inner.webp

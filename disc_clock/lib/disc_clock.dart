@@ -23,9 +23,7 @@ class _DiscClockState extends State<DiscClock>
     with SingleTickerProviderStateMixin {
   var _now = DateTime.now();
   var _temperature = '';
-  var _temperatureRange = '';
-  var _condition = '';
-  var _location = '';
+  var _condition;
 
   Timer _timer;
   AnimationController _controller;
@@ -71,9 +69,7 @@ class _DiscClockState extends State<DiscClock>
   void _updateModel() {
     setState(() {
       _temperature = widget.model.temperatureString;
-      _temperatureRange = '(${widget.model.low} - ${widget.model.highString})';
-      _condition = widget.model.weatherString;
-      _location = widget.model.location;
+      _condition = widget.model.weatherCondition;
     });
   }
 
@@ -102,13 +98,13 @@ class _DiscClockState extends State<DiscClock>
             highlightColor: Color(0xFF8AB4F8),
             // Second hand.
             accentColor: Color(0xFF669DF6),
-            backgroundColor: Color(0xFF3C4043),
+            backgroundColor: Color(0xFF000000),
           )
         : Theme.of(context).copyWith(
             primaryColor: Color(0xFFD2E3FC),
             highlightColor: Color(0xFF4285F4),
             accentColor: Color(0xFF8AB4F8),
-            backgroundColor: Color(0xFF3C4043),
+            backgroundColor: Color(0xFF000000),
           );
 
     final time = DateFormat.Hms().format(DateTime.now());
@@ -118,9 +114,7 @@ class _DiscClockState extends State<DiscClock>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(_temperature),
-          Text(_temperatureRange),
-          Text(_condition),
-          Text(_location),
+          Text(_condition.toString().split('.').last),
         ],
       ),
     );
@@ -272,6 +266,30 @@ class _DiscClockState extends State<DiscClock>
                   child: Image.asset('assets/1.webp'),
                 ),
               ),
+            ),
+            Positioned(
+              width: 400,
+              height: 400,
+              top: -50,
+              left: -250,
+              child: Image.asset('assets/spacer.webp'),
+            ),
+            Positioned(
+              width: 300,
+              height: 300,
+              top: 0,
+              left: -200,
+              child: Transform.rotate(
+                angle: _condition.index * radians(25.714),
+                child: Image.asset('assets/weather.webp'),
+              ),
+            ),
+            Positioned(
+              width: 200,
+              height: 200,
+              top: 50,
+              left: -150,
+              child: Image.asset('assets/inner.webp'),
             ),
             Positioned(
               width: 1200,
