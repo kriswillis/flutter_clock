@@ -95,7 +95,7 @@ class _DiscClockState extends State<DiscClock>
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
       style: TextStyle(
-        color: Color(0xBBFF4901),
+        color: Color(0xFFD63D00),
         fontFamily: 'VT323',
         fontSize: 23,
       ),
@@ -104,7 +104,7 @@ class _DiscClockState extends State<DiscClock>
 
     return Semantics.fromProperties(
       properties: SemanticsProperties(
-        label: 'Analog clock with time $time',
+        label: 'Digital clock with time $time',
         value: time,
       ),
       child: Container(
