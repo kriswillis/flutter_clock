@@ -140,12 +140,14 @@ class _DiscClockState extends State<DiscClock>
               position: 4,
               animation: _animation,
               now: _now,
+              is24HourFormat: widget.model.is24HourFormat,
             ),
             NumberDisc(
               image: '$mode/1.webp',
               position: 3,
               animation: _animation,
               now: _now,
+              is24HourFormat: widget.model.is24HourFormat,
             ),
             StaticDisc(
               image: '$mode/spacer.webp',
