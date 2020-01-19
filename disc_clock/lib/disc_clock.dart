@@ -1,14 +1,13 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:intl/intl.dart';
-import 'package:vector_math/vector_math_64.dart' show radians;
+
+import 'number_disc.dart';
+import 'static_disc.dart';
+import 'weather_disc.dart';
 
 class DiscClock extends StatefulWidget {
   const DiscClock(this.model);
@@ -119,12 +118,6 @@ class _DiscClockState extends State<DiscClock>
       ),
     );
 
-    final newMinute = _now.second == 0;
-    final newMinuteTen = newMinute && _now.minute % 10 == 0;
-    final newHour = newMinute && _now.minute == 0;
-    final newHourTen = newHour && _now.hour % 10 == 0;
-    final newDay = newHour && _now.hour == 0;
-
     return Semantics.fromProperties(
       properties: SemanticsProperties(
         label: 'Analog clock with time $time',
@@ -134,162 +127,55 @@ class _DiscClockState extends State<DiscClock>
         color: customTheme.backgroundColor,
         child: Stack(
           children: [
-            Positioned(
-              width: 1000,
-              height: 1000,
-              top: -350,
-              left: -550,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget _widget) {
-                  return Transform.rotate(
-                    angle: radians(6) * _animation.value,
-                    child: _widget,
-                  );
-                },
-                child: Transform.rotate(
-                  angle: (_now.second - 1) * radians(6),
-                  child: Image.asset('assets/6.webp'),
-                ),
-              ),
+            NumberDisc(
+              image: '6.webp',
+              position: 8,
+              animation: _animation,
+              now: _now,
             ),
-            Positioned(
-              width: 900,
-              height: 900,
-              top: -300,
-              left: -500,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget _widget) {
-                  double degrees = _now.second % 10 == 0 ? 6 : 0;
-
-                  return Transform.rotate(
-                    angle: radians(degrees) * _animation.value,
-                    child: _widget,
-                  );
-                },
-                child: Transform.rotate(
-                  angle: ((_now.second - 1) / 10).floor() * radians(6),
-                  child: Image.asset('assets/5.webp'),
-                ),
-              ),
+            NumberDisc(
+              image: '5.webp',
+              position: 7,
+              animation: _animation,
+              now: _now,
             ),
-            Positioned(
-              width: 800,
-              height: 800,
-              top: -250,
-              left: -450,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget _widget) {
-                  double degrees = newMinute ? 6 : 0;
-
-                  return Transform.rotate(
-                    angle: radians(degrees) * _animation.value,
-                    child: _widget,
-                  );
-                },
-                child: Transform.rotate(
-                  angle: (_now.minute - (newMinute ? 1 : 0)) * radians(6),
-                  child: Image.asset('assets/4.webp'),
-                ),
-              ),
+            NumberDisc(
+              image: '4.webp',
+              position: 6,
+              animation: _animation,
+              now: _now,
             ),
-            Positioned(
-              width: 700,
-              height: 700,
-              top: -200,
-              left: -400,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget _widget) {
-                  double degrees = newMinuteTen ? 7.5 : 0;
-
-                  return Transform.rotate(
-                      angle: radians(degrees) * _animation.value,
-                      child: _widget);
-                },
-                child: Transform.rotate(
-                  angle: ((_now.minute - (newMinuteTen ? 1 : 0)) / 10).floor() *
-                      radians(7.5),
-                  child: Image.asset('assets/3.webp'),
-                ),
-              ),
+            NumberDisc(
+              image: '3.webp',
+              position: 5,
+              animation: _animation,
+              now: _now,
             ),
-            Positioned(
-              width: 600,
-              height: 600,
-              top: -150,
-              left: -350,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget _widget) {
-                  double degrees = newHour ? 9 : 0;
-
-                  // Handle the change from 23 to 00
-                  // Go forward 7 numbers rather than one (9° * 7)
-                  if (_now.hour == 0 && degrees > 0) {
-                    degrees = 63;
-                  }
-
-                  return Transform.rotate(
-                    angle: radians(degrees) * _animation.value,
-                    child: _widget,
-                  );
-                },
-                child: Transform.rotate(
-                  // Handle the change from 23 to 00
-                  angle: (newDay ? 3 : (_now.hour - (newHour ? 1 : 0))) *
-                      radians(9),
-                  child: Image.asset('assets/2.webp'),
-                ),
-              ),
+            NumberDisc(
+              image: '2.webp',
+              position: 4,
+              animation: _animation,
+              now: _now,
             ),
-            Positioned(
-              width: 500,
-              height: 500,
-              top: -100,
-              left: -300,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (BuildContext context, Widget _widget) {
-                  double degrees = newHourTen ? 12 : 0;
-
-                  return Transform.rotate(
-                    angle: radians(degrees) * _animation.value,
-                    child: _widget,
-                  );
-                },
-                child: Transform.rotate(
-                  angle: ((_now.hour - (newHourTen ? 1 : 0)) / 10).floor() *
-                      radians(12),
-                  child: Image.asset('assets/1.webp'),
-                ),
-              ),
+            NumberDisc(
+              image: '1.webp',
+              position: 3,
+              animation: _animation,
+              now: _now,
             ),
-            Positioned(
-              width: 400,
-              height: 400,
-              top: -50,
-              left: -250,
-              child: Image.asset('assets/spacer.webp'),
+            StaticDisc(
+              image: 'spacer.webp',
+              position: 2,
             ),
-            Positioned(
-              width: 300,
-              height: 300,
-              top: 0,
-              left: -200,
-              child: Transform.rotate(
-                angle: _condition.index * radians(25.714),
-                child: Image.asset('assets/weather.webp'),
-              ),
+            WeatherDisc(
+              image: 'weather.webp',
+              position: 1,
+              animation: _animation,
+              condition: _condition,
             ),
-            Positioned(
-              width: 200,
-              height: 200,
-              top: 50,
-              left: -150,
-              child: Image.asset('assets/inner.webp'),
+            StaticDisc(
+              image: 'inner.webp',
+              position: 0,
             ),
             Positioned(
               width: 1200,
