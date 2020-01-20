@@ -97,7 +97,7 @@ class _DiscClockState extends State<DiscClock>
       style: TextStyle(
         color: Color(0xFFD63D00),
         fontFamily: 'VT323',
-        fontSize: 23,
+        fontSize: 24,
       ),
       child: Text(_temperature),
     );
@@ -166,13 +166,13 @@ class _DiscClockState extends State<DiscClock>
             Positioned(
               width: 1200,
               height: 1200,
-              top: -442,
+              top: -600 + MediaQuery.of(context).size.height / 2,
               left: -600,
               child: Image.asset('assets/overlay.webp'),
             ),
             Positioned(
               left: 12,
-              top: 146,
+              top: MediaQuery.of(context).size.height / 2 - 12,
               child: weatherInfo,
             ),
           ],

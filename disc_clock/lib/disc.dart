@@ -11,8 +11,6 @@ abstract class Disc extends StatelessWidget {
   final int position;
   final int maxDiscs = 8;
 
-  // todo: Figure out how to make this stuff responsive
-
   double edgeLength() {
     final double max = 1000;
     final double step = 100;
@@ -20,8 +18,8 @@ abstract class Disc extends StatelessWidget {
     return max - ((maxDiscs - position) * step);
   }
 
-  double positionTop() {
-    final double max = -342;
+  double positionTop(BuildContext context) {
+    final double max = -500 + (MediaQuery.of(context).size.height / 2);
     final double step = 50;
 
     return max + ((maxDiscs - position) * step);

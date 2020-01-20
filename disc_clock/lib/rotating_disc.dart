@@ -25,7 +25,7 @@ abstract class RotatingDisc extends Disc {
     return Positioned(
       width: edgeLength(),
       height: edgeLength(),
-      top: positionTop(),
+      top: positionTop(context),
       left: positionLeft(),
       child: AnimatedBuilder(
         animation: animation,
