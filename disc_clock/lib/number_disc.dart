@@ -25,46 +25,44 @@ class NumberDisc extends RotatingDisc {
   final bool is24HourFormat;
 
   double initialRotation() {
-    final newMinute = now.second == 0;
-    final newMinuteTen = newMinute && now.minute % 10 == 0;
-    final newHour = newMinute && now.minute == 0;
-    final newHourTen = newHour && now.hour % 10 == 0;
-    final newDay = newHour && now.hour == 0;
-
     switch (position) {
-      case 8:
+      case 8: // Seconds (Right)
         return (now.second - 1) * radians(6);
-      case 7:
+      case 7: // Seconds (Left)
         return ((now.second - 1) / 10).floor() * radians(6);
-      case 6:
-        return (now.minute - (newMinute ? 1 : 0)) * radians(6);
-      case 5:
-        return ((now.minute - (newMinuteTen ? 1 : 0)) / 10).floor() *
+      case 6: // Minutes (Right)
+        return (now.minute - (_isNewMinute() ? 1 : 0)) * radians(6);
+      case 5: // Minutes (Left)
+        return ((now.minute - (_isNewMinuteTen() ? 1 : 0)) / 10).floor() *
             radians(7.5);
-      case 4:
+      case 4: // Hours (Right)
         if (is24HourFormat) {
-          // Handle the change from 23 to 00
-          return (newDay ? 3 : (now.hour - (newHour ? 1 : 0))) * radians(9);
+          if (_isNewDay()) {
+            // Change from 2(3) to 0(0)
+            return 3 * radians(9);
+          }
+
+          return (now.hour - (_isNewHour() ? 1 : 0)) * radians(9);
         }
 
-        // Handle the change from 12 to 01
-        final hour = DateFormat('hh').format(now);
-        if (hour == '01' && newHour) {
+        if (_get12Hour() == 1 && _isNewHour()) {
+          // Change from 1(2) to 0(1)
           return 2 * radians(9);
         }
 
-        return (double.parse(hour) - (newHour ? 1 : 0)) * radians(9);
-      case 3:
+        return (_get12Hour() - (_isNewHour() ? 1 : 0)) * radians(9);
+      case 3: // Hours (Left)
         if (is24HourFormat) {
-          return ((now.hour - (newHourTen ? 1 : 0)) / 10).floor() * radians(12);
+          return ((now.hour - (_isNewHourTen() ? 1 : 0)) / 10).floor() *
+              radians(12);
         }
 
-        final hour = DateFormat('hh').format(now);
-        if (hour == '01' && newHour) {
+        if (_get12Hour() == 1 && _isNewHour()) {
+          // Change from (1)2 to (0)1
           return radians(12);
         }
 
-        return ((double.parse(hour) - (newHour ? 1 : 0)) / 10).floor() *
+        return ((_get12Hour() - (_isNewHour() ? 1 : 0)) / 10).floor() *
             radians(12);
       default:
         return 0;
@@ -72,66 +70,57 @@ class NumberDisc extends RotatingDisc {
   }
 
   double targetRotation() {
-    final newMinute = now.second == 0;
-    final newMinuteTen = newMinute && now.minute % 10 == 0;
-    final newHour = newMinute && now.minute == 0;
-    final newHourTen = newHour && now.hour % 10 == 0;
-
     double degrees = 0;
 
     switch (position) {
-      case 8:
+      case 8: // Seconds (Right)
         degrees = 6;
         break;
-      case 7:
+      case 7: // Seconds (Left)
         degrees = now.second % 10 == 0 ? 6 : 0;
         break;
-      case 6:
-        degrees = newMinute ? 6 : 0;
+      case 6: // Minutes (Right)
+        degrees = _isNewMinute() ? 6 : 0;
         break;
-      case 5:
-        degrees = newMinuteTen ? 7.5 : 0;
+      case 5: // Minutes (Left)
+        degrees = _isNewMinuteTen() ? 7.5 : 0;
         break;
-      case 4:
-        degrees = newHour ? 9 : 0;
+      case 4: // Hours (Right)
+        degrees = _isNewHour() ? 9 : 0;
 
         if (is24HourFormat) {
-          // Handle the change from 23 to 00
-          // Go forward 7 numbers rather than one (9° * 7)
           if (now.hour == 0 && degrees > 0) {
+            // Change from 2(3) to 0(0): +7 × 9°
             degrees = 63;
           }
-        } else if ((now.hour == 1 || now.hour == 13) && degrees > 0) {
-          degrees = 81; // 9° * 9
+        } else if (_get12Hour() == 1 && degrees > 0) {
+          // Change from 1(2) to 0(1): +9 × 9°
+          degrees = 81;
         }
         break;
-      case 3:
+      case 3: // Hours (Left)
         if (is24HourFormat) {
-          degrees = newHourTen ? 12 : 0;
-        } else {
-          if (newHour) {
-            switch (now.hour) {
-              case 1:
-              case 13:
-                degrees = 24;
-                break;
-              case 10:
-              case 22:
-                degrees = 12;
-                break;
-              default:
-                degrees = 0;
-                break;
-            }
-          } else {
-            degrees = 0;
-          }
+          degrees = _isNewHourTen() ? 12 : 0;
+        } else if (_isNewHour() && _get12Hour() == 1) {
+          degrees = 24; // Change from (1)2 to (0)1: +2 × 12°
+        } else if (_isNewHour() && _get12Hour() == 10) {
+          degrees = 12; // Change from (0)9 to (1)0: +1 × 12°
         }
         break;
-      default:
-        return 0;
     }
 
     return radians(degrees) * animation.value;
   }
+
+  bool _isNewMinute() => now.second == 0;
+
+  bool _isNewMinuteTen() => _isNewMinute() && now.minute % 10 == 0;
+
+  bool _isNewHour() => _isNewMinute() && now.minute == 0;
+
+  bool _isNewHourTen() => _isNewHour() && now.hour % 10 == 0;
+
+  bool _isNewDay() => _isNewHour() && now.hour == 0;
+
+  double _get12Hour() => double.parse(DateFormat('hh').format(now));
 }

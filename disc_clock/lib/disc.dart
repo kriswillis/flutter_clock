@@ -11,6 +11,8 @@ abstract class Disc extends StatelessWidget {
   final int position;
   final int maxDiscs = 8;
 
+  // todo: Figure out how to make this stuff responsive
+
   double edgeLength() {
     final double max = 1000;
     final double step = 100;
