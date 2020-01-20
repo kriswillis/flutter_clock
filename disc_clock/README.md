@@ -21,6 +21,12 @@ data.
 This clock face was developed and tested on the Nexus S Android 9.0 Emulator, with a resolution of 
 480 × 800 (HDPI); a close match for the Lenovo Smart Clock.
 
+### Bug
+
+When deleting the `android` directory in this repo and then recreating it with `flutter create .`, 
+the Android emulators do not hide the system UI overlays correctly and leaves a gap that throws 
+off the widgets' positioning.
+
 ## Third Party Materials
 
 The temperature display uses the [VT323-Regular](https://fonts.google.com/specimen/VT323) font, 
